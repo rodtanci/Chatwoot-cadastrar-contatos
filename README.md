@@ -1,10 +1,10 @@
 # Automação Inteligente de Cadastro de Contatos com Etiquetas no Chatwoot 🤖✨
 
 ### Descrição
-Este projeto foi criado para facilitar a gestão de contatos no Chatwoot, permitindo o cadastro automático de uma lista de contatos a partir de uma tabela Excel em formato CSV. Com essa automação, você pode adicionar etiquetas personalizadas ou selecionar etiquetas que já existam no sistema, proporcionando uma organização eficiente e prática. Tudo isso, sem complicações e com total flexibilidade, tornando o processo de gerenciamento de contatos muito mais ágil e automatizado.
+Este projeto foi criado para facilitar a gestão de contatos no Chatwoot, permitindo o cadastro automático de uma lista de contatos a partir de uma tabela Excel em formato XLS. Com essa automação, você pode adicionar etiquetas personalizadas ou selecionar etiquetas que já existam no sistema, proporcionando uma organização eficiente e prática. Tudo isso, sem complicações e com total flexibilidade, tornando o processo de gerenciamento de contatos muito mais ágil e automatizado.
 
 ## 🚀 Funcionalidades
-- **Cadastro Automático**: Importa contatos diretamente de uma planilha Excel (CSV) para o Chatwoot.
+- **Cadastro Automático**: Importa contatos diretamente de uma planilha Excel (XLS) para o Chatwoot.
 - **Etiquetas Dinâmicas**: Crie novas etiquetas na hora ou selecione uma existente para organizar seus contatos.
 - **Praticidade e Agilidade**: Reduz o tempo de cadastramento manual e garante uma organização estruturada.
 
