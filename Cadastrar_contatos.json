@@ -1,0 +1,676 @@
+{
+  "name": "Cadastrar contatos",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d4af08f8-9a49-453a-8d5b-8d2bd337957a",
+      "name": "Replace Me",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
+      "id": "ae39dc1b-a911-410b-b0d9-cc722b39571e",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Cria uma variável 'caixa' que será uma lista de nomes\nlet etiquetas = [];\n\n// Itera sobre os registros encontrados\nfor (let item of items) {\n  // Adiciona cada nome encontrado à variável 'caixa'\n  etiquetas.push(item.json.title);\n}\n\n// Retorna a variável 'caixa' como um item\nreturn [{ json: { etiquetas } }];\n"
+      },
+      "id": "b4d3a1a7-e67b-46d4-9855-33c76cd7ddd7",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "b9e232d0-4605-47cf-8481-912393b8c999",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "bbb173de-3da1-4959-a596-8a1fdf641d8d",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1580,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c149a790-2940-4774-a8c0-270db8834fb5",
+              "name": "chatwoot_url",
+              "value": "url chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "7c534eba-8917-4bc8-ba2a-79012d0eb379",
+              "name": "chatwoot_id",
+              "value": "id chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "f4d35ed8-2c7f-487c-bf26-0100243133a3",
+              "name": "chatwoot_token",
+              "value": "token chatwoot",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "997db39a-7f37-481d-8e11-33bfd858e8c6",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "15b0c066-0f48-4268-9a2e-8966d76e2d6c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "9ccfa0a6-1928-4cae-adde-e8741e2d2ff9",
+      "name": "Cadastra contatos",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        860,
+        660
+      ],
+      "webhookId": "15b0c066-0f48-4268-9a2e-8966d76e2d6c"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d4b264b6-9a4b-4332-bea0-c5222b54a46d",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "330be66d-fc30-4ed1-bcea-703ddcfacd4a",
+      "name": "Busca etiquetas",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        860,
+        100
+      ],
+      "webhookId": "d4b264b6-9a4b-4332-bea0-c5222b54a46d"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "990c4323-6eb4-4556-a4ca-d7330ab94e47",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "3d3b10fa-528c-4f03-97ff-7cec31fa8680",
+      "name": "Cadastra etiqueta2",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        860,
+        -180
+      ],
+      "webhookId": "990c4323-6eb4-4556-a4ca-d7330ab94e47"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.chatwoot_url }}/api/v1/accounts/{{ $json.chatwoot_id }}/labels ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "={{ $json.chatwoot_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n      \"title\": \"{{ $('Cadastra etiqueta2').item.json.body.etiqueta }}\",\n      \"description\": \"Descrição do novo disparo\",\n      \"color\": \"#ff5733\",\n      \"show_on_sidebar\": true\n    }",
+        "options": {}
+      },
+      "id": "f3fb8f6f-5b8b-44a9-9d07-bf2bd1dc18de",
+      "name": "Cadastra etiqueta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1220,
+        -180
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "37a9874f-9b6c-4f6f-b321-f81b4563f434",
+      "name": "Respond to Webhook2",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1860,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c149a790-2940-4774-a8c0-270db8834fb5",
+              "name": "chatwoot_url",
+              "value": "url chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "7c534eba-8917-4bc8-ba2a-79012d0eb379",
+              "name": "chatwoot_id",
+              "value": "id chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "f4d35ed8-2c7f-487c-bf26-0100243133a3",
+              "name": "chatwoot_token",
+              "value": "token chatwoot",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5a26d93-a280-4ac4-a2de-1a4b75aebeaa",
+      "name": "Dados1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c149a790-2940-4774-a8c0-270db8834fb5",
+              "name": "chatwoot_url",
+              "value": "url chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "7c534eba-8917-4bc8-ba2a-79012d0eb379",
+              "name": "chatwoot_id",
+              "value": "id chatwoot",
+              "type": "string"
+            },
+            {
+              "id": "f4d35ed8-2c7f-487c-bf26-0100243133a3",
+              "name": "chatwoot_token",
+              "value": "token chatwoot",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "31ba6516-5ea2-4758-8210-2aa7cb22a896",
+      "name": "Dados2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://minioapi.setabot.com.br/typebot/public/tmp/cm0px9use000otluj1owjrhl3/contatos-woot.xls",
+        "options": {}
+      },
+      "id": "66735776-898a-4dc6-90f7-649dbad0d14d",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT title, account_id\nFROM labels\nWHERE account_id = {{ $json.chatwoot_id }}",
+        "options": {
+          "queryReplacement": "={{ $json.chatwoot_id }}"
+        }
+      },
+      "id": "3bd785d3-1b5d-410f-b3b3-b60c76839998",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1220,
+        100
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "CbrIGpLnj1oilB4h",
+          "name": "Chatwoot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fe44dcc2-7f33-4bf0-921b-b55c1fde9d0b",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1600,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Dados2').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Dados2').item.json.chatwoot_id }}/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "={{ $('Dados2').item.json.chatwoot_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"name\": \"{{ $json.nome }}\",\n\"email\": \"{{ $json.email }}\",\n\"phone_number\": \"+{{ $json.telefone }}\"\n}",
+        "options": {}
+      },
+      "id": "0cd16855-5a75-46e6-8204-38f2066bddd6",
+      "name": "Cadastra contato",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1860,
+        580
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Dados2').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Dados2').item.json.chatwoot_id }}/contacts/{{ $json.payload[0].id }}/labels",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "={{ $('Dados2').item.json.chatwoot_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"labels\": [\"{{ $('Cadastra contatos').item.json.body.etiqueta }}\"]\n}",
+        "options": {}
+      },
+      "id": "a99cc82c-1e27-4eed-9604-df2826d87f10",
+      "name": "atribui etiqueta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        2260,
+        580
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Dados2').item.json.chatwoot_url }}/api/v1/accounts/{{ $('Dados2').item.json.chatwoot_id }}/contacts/search ",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $('Loop Over Items').item.json.telefone }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "={{ $('Dados2').item.json.chatwoot_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "93412fd0-e265-4275-82e8-6df660e7c42d",
+      "name": "Busca contato",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        2060,
+        580
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Cadastra etiqueta\n**Criado por Rodrigo Tanci**",
+        "height": 287.8707074425289,
+        "width": 766.5264424104137
+      },
+      "id": "246a7eca-1021-4a97-84bf-b1ae5e28b21f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Seleciona etiqueta\n**Criado por Rodrigo Tanci**",
+        "height": 287.8707074425289,
+        "width": 947.0497940939842
+      },
+      "id": "6cb7dcf7-d251-4078-8c82-b3f7f2a64f6f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Cadastra contato\n**Criado por Rodrigo Tanci**",
+        "height": 560.5361865479214,
+        "width": 1815.8184240711662
+      },
+      "id": "8300d594-0254-4546-984d-562afffe095e",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        340
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Cadastra etiqueta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastra etiqueta2": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastra etiqueta": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados1": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca etiquetas": {
+      "main": [
+        [
+          {
+            "node": "Dados1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadastra contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastra contato": {
+      "main": [
+        [
+          {
+            "node": "Busca contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "atribui etiqueta": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca contato": {
+      "main": [
+        [
+          {
+            "node": "atribui etiqueta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastra contatos": {
+      "main": [
+        [
+          {
+            "node": "Dados2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b560cab0-8f60-4c5c-b738-dc8039fb40f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "ToZSJZZgdU7bCHDw",
+  "tags": [
+    {
+      "createdAt": "2024-06-24T17:54:45.734Z",
+      "updatedAt": "2024-06-24T17:54:45.734Z",
+      "id": "W4QFAwjDhUwUJMhH",
+      "name": "Dev"
+    }
+  ]
+}
