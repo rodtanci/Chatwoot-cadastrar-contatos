@@ -176,7 +176,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n      \"title\": \"{{ $('Cadastra etiqueta2').item.json.body.etiqueta }}\",\n      \"description\": \"Descrição do novo disparo\",\n      \"color\": \"#ff5733\",\n      \"show_on_sidebar\": true\n    }",
+        "jsonBody": "={\n      \"title\": \"{{ $('Cadastra etiqueta2').item.json.body.etiqueta }}\",\n      \"color\": \"#ff5733\",\n      \"show_on_sidebar\": true\n    }",
         "options": {}
       },
       "id": "f3fb8f6f-5b8b-44a9-9d07-bf2bd1dc18de",
