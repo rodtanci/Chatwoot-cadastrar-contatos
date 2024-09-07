@@ -277,7 +277,7 @@
     },
     {
       "parameters": {
-        "url": "=https://minioapi.setabot.com.br/typebot/public/tmp/cm0px9use000otluj1owjrhl3/contatos-woot.xls",
+        "url": "= {{ $('Cadastra contatos').item.json.body.arquivo }}",
         "options": {}
       },
       "id": "66735776-898a-4dc6-90f7-649dbad0d14d",
